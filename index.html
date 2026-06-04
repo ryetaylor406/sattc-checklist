@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SATTC Work Checklist</title>
+<style>
+/* ── Brand Colors ─────────────────────────────────────── */
+:root {
+  --primary: #212557;
+  --primary-light: #2f3473;
+  --primary-dark: #171b42;
+  --accent: #e8b84b;
+  --accent-hover: #d4a63a;
+  --bg: #f5f5f0;
+  --card-bg: #ffffff;
+  --text: #1a1a1a;
+  --text-light: #666666;
+  --border: #e0ddd5;
+  --success: #2d8a4e;
+  --danger: #c0392b;
+  --warning: #e67e22;
+  --overdue-bg: #fef0ef;
+  --overdue-border: #f5c6c2;
+  --done-bg: #f0f9f2;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --radius: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding-bottom: 80px;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+header {
+  background: var(--primary);
+  color: white;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.header-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+header img {
+  height: 44px;
+  width: auto;
+  filter: brightness(0) invert(1); /* makes logo white */
+}
+.header-text h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.header-text .date {
+  font-size: 13px;
+  opacity: 0.8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── Crew Name Input ─────────────────────────────────── */
+.crew-bar {
+  max-width: 800px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+}
+.crew-bar label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  display: block;
+  margin-bottom: 4px;
+}
+.crew-bar input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--card-bg);
+  transition: border-color 0.2s;
+}
+.crew-bar input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.crew-bar .saved-name {
+  font-size: 13px;
+  color: var(--success);
+  margin-top: 4px;
+  display: none;
+}
+
+/* ── Container ────────────────────────────────────────── */
+.container {
+  max-width: 800px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+}
+
+/* ── Status Banner ───────────────────────────────────── */
+.status-banner {
+  display: none;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.status-banner.error {
+  display: block;
+  background: var(--overdue-bg);
+  border: 1px solid var(--overdue-border);
+  color: var(--danger);
+}
+.status-banner.loading {
+  display: block;
+  background: #eef4ff;
+  border: 1px solid #c4d4f0;
+  color: var(--primary);
+}
+
+/* ── Section ──────────────────────────────────────────── */
+.section {
+  margin-bottom: 20px;
+}
+.section-header {
+  background: var(--primary);
+  color: white;
+  padding: 10px 16px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ── Sub-Section (e.g. Daily Compliance under Temporary Housing) ── */
+.sub-section {
+  margin: 0 0 2px 0;
+}
+.sub-header {
+  background: #edece6;
+  padding: 8px 16px 8px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Task Card ────────────────────────────────────────── */
+.task-card {
+  background: var(--card-bg);
+  border-left: 4px solid var(--primary);
+  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.task-card:last-child {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+.task-card.overdue {
+  border-left-color: var(--danger);
+  background: var(--overdue-bg);
+}
+.task-card.completed {
+  border-left-color: var(--success);
+  background: var(--done-bg);
+  opacity: 0.7;
+}
+.task-card .check-col {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.task-card .check-col button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: transparent;
+  transition: all 0.2s;
+}
+.task-card .check-col button:hover {
+  background: var(--primary);
+  color: white;
+}
+.task-card .check-col button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.task-card.completed .check-col button {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+.task-card .task-body {
+  flex: 1;
+  min-width: 0;
+}
+.task-card .task-name {
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+.task-card .task-meta {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.task-card .task-meta .badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-daily { background: #e3f0ff; color: #1a5fa8; }
+.badge-weekly { background: #e8f5e9; color: #2d7d46; }
+.badge-monthly { background: #fff3e0; color: #bf6f00; }
+.badge-quarterly { background: #f3e5f5; color: #7b1fa2; }
+.badge-oneoff { background: #fce4ec; color: #b71c1c; }
+.badge-overdue { background: #fdecea; color: var(--danger); font-weight: 700; }
+.badge-completed { background: #e8f5e9; color: var(--success); }
+
+/* ── Notes ────────────────────────────────────────────── */
+.task-notes {
+  font-size: 13px;
+  color: var(--text-light);
+  font-style: italic;
+  margin-top: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── Empty State ──────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+  background: var(--card-bg);
+  border-radius: var(--radius);
+}
+.empty-state p { font-size: 16px; margin-bottom: 8px; }
+.empty-state .sub { font-size: 14px; }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+
+/* ── Reference Docs ───────────────────────────────────── */
+.ref-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 {
+  font-size: 16px;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+.ref-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.ref-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+  display: block;
+}
+.ref-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
+}
+.ref-card .crew-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.ref-card .crew-leader {
+  font-size: 12px;
+  color: var(--text-light);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  margin-top: 2px;
+}
+.ref-card .crew-doc {
+  font-size: 13px;
+  margin-top: 6px;
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* ── Footer ───────────────────────────────────────────── */
+.footer-note {
+  text-align: center;
+  padding: 24px 16px;
+  font-size: 12px;
+  color: var(--text-light);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── Toast ────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-dark);
+  color: white;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 200;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 600px) {
+  .header-inner { gap: 10px; }
+  header img { height: 36px; }
+  .header-text h1 { font-size: 16px; }
+  .ref-grid { grid-template-columns: 1fr; }
+  .task-card { padding: 10px 12px; gap: 10px; }
+  .task-card .task-name { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ Header ═══ -->
+<header>
+  <div class="header-inner">
+    <img src="https://img1.wsimg.com/isteam/ip/0945c099-6201-4d5f-8d3e-ce9d69261f44/SATTC%20Logo.png/:/rs=h:97,cg:true,m/qt=q:95"
+         alt="SATTC Logo"
+         onerror="this.style.display='none'">
+    <div class="header-text">
+      <h1>Work Checklist</h1>
+      <div class="date" id="currentDate"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ Crew Name ═══ -->
+<div class="crew-bar">
+  <label for="crewName">Your Name</label>
+  <input type="text" id="crewName" placeholder="Enter your name to get started..." autocomplete="name">
+  <div class="saved-name" id="savedName">✓ Name saved</div>
+</div>
+
+<!-- ═══ Status ═══ -->
+<div class="container">
+  <div class="status-banner" id="statusBanner"></div>
+</div>
+
+<!-- ═══ Task List ═══ -->
+<div class="container" id="taskList"></div>
+
+<!-- ═══ Reference Docs ═══ -->
+<div class="container">
+  <div class="ref-section" id="refSection"></div>
+</div>
+
+<!-- ═══ Footer ═══ -->
+<div class="footer-note">
+  The Stress &amp; Trauma Treatment Center &bull; Work Checklist
+</div>
+
+<!-- ═══ Toast ═══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+// After deploying the Apps Script Web App, paste its URL here:
+const WEB_APP_URL = '';  // e.g. 'https://script.google.com/macros/s/ABCDEF/exec'
+
+// ── Sample Fallback Data ────────────────────────────────────────────────────
+// Shows when WEB_APP_URL is not configured (preview/demo mode)
+const SAMPLE_TASKS = [
+  { id:"TH-D1", name:"Rooms are vacated and doors are locked at 9AM", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-03", lastDone:"", notes:"Temporary Housing — first item of the day", completedBy:"", parent:"Temporary Housing", isOverdue:true },
+  { id:"TH-D2", name:"Ensure trash is removed from all rooms", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-04", lastDone:"", notes:"Individual Inspection of Rooms", completedBy:"", parent:"Temporary Housing", isOverdue:true },
+  { id:"TH-D3", name:"Ensure dishes are removed from all rooms and washed", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Individual Inspection of Rooms", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D4", name:"Ensure trash is removed (kitchen, bathroom, hallway)", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D5", name:"Ensure dishes are washed", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D6", name:"Ensure dishes in the cabinets are clean", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D7", name:"Ensure countertops/tables have been washed with a wet cloth and cleaner", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D8", name:"Ensure bathroom sink has been washed with a wet cloth and cleaner", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D9", name:"Ensure the bathroom floor has been mopped with a swiffer", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Critical: track dirt back in", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D10", name:"Ensure the stairs and entrance way has been mopped", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Lock door after mopping so it dries without traffic", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-T1", name:"Participants must remove all personal items from the property by 9AM", category:"Tuesday Compliance", cadence:"Weekly", nextDue:"2026-06-09", lastDone:"", notes:"Tuesdays only", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"FAC-001", name:"Change batteries in smoke detector - Eldorado Family Center", category:"Eldorado", cadence:"Quarterly", nextDue:"2026-09-15", lastDone:"", notes:"Facility recurring task", completedBy:"", parent:"", isOverdue:false },
+  { id:"FAC-002", name:"Test smoke detectors (all locations)", category:"Eldorado", cadence:"Monthly", nextDue:"2026-07-01", lastDone:"", notes:"Apply to all buildings", completedBy:"", parent:"", isOverdue:false },
+  { id:"INT-2", name:"Wipe down breakroom counters", category:"Eldorado", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"", completedBy:"", parent:"", isOverdue:false }
+];
+
+const SAMPLE_REFS = [
+  { crew:"Inside Cleaning", leader:"Kaylin", title:"Inside Cleaning Crew To Do List", url:"https://docs.google.com/document/d/1jLCCEPaoKZf9-NiFcPYy0YHydcjcsljxl3EVrXswBQk/edit?tab=t.0" },
+  { crew:"Outside Cleaning", leader:"Jayme", title:"Outside Cleaning Crew To Do List", url:"https://docs.google.com/document/d/1CRrxL08dimdcSRS01Qe9pOByfmeVMdILbQ4gOubOjnY/edit?tab=t.0" },
+  { crew:"Mowing", leader:"Jayme", title:"Mowing Crew To Do List", url:"https://docs.google.com/document/d/186dHl673ZOwYS0KmAr3hcXJYOrOXGwJ9jKHhtZd-eUY/edit?tab=t.0" },
+  { crew:"Clerical", leader:"Mindy", title:"Clerical Crew To Do List", url:"https://docs.google.com/document/d/1fE0U0TzKNR0_bxUtVzcA7XLs2cOKzG9hEZcOYFkam5Q/edit?tab=t.0" },
+  { crew:"Construction/Tech", leader:"Shawn", title:"Construction/Technical Maintenance", url:"https://docs.google.com/document/d/1rllIw_WqW9Djs8IjVJ8amVoebXqv0GYiZFJKF86K0uU/edit?tab=t.0" }
+];
+
+// ── State ───────────────────────────────────────────────────────────────────
+let tasks = [];
+let refDocs = [];
+let crewName = localStorage.getItem('sattc_crew_name') || '';
+
+// ── DOM refs ────────────────────────────────────────────────────────────────
+const taskListEl = document.getElementById('taskList');
+const refSectionEl = document.getElementById('refSection');
+const statusBanner = document.getElementById('statusBanner');
+const crewNameInput = document.getElementById('crewName');
+const savedNameEl = document.getElementById('savedName');
+const toastEl = document.getElementById('toast');
+
+// ── Init ────────────────────────────────────────────────────────────────────
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+});
+
+if (crewName) {
+  crewNameInput.value = crewName;
+  savedNameEl.style.display = 'block';
+}
+
+crewNameInput.addEventListener('change', function() {
+  const name = this.value.trim();
+  if (name) {
+    crewName = name;
+    localStorage.setItem('sattc_crew_name', name);
+    savedNameEl.style.display = 'block';
+    setTimeout(() => { savedNameEl.style.display = 'none'; }, 2000);
+  }
+});
+
+// ── Fetch Tasks ─────────────────────────────────────────────────────────────
+async function loadTasks() {
+  if (WEB_APP_URL) {
+    showStatus('loading', 'Loading tasks...');
+    try {
+      const res = await fetch(WEB_APP_URL);
+      const data = await res.json();
+      if (data.success) {
+        tasks = data.tasks;
+        refDocs = data.refDocs || [];
+        hideStatus();
+      } else {
+        throw new Error(data.error || 'Failed to load');
+      }
+    } catch (e) {
+      console.warn('Web app fetch failed, using sample data:', e);
+      tasks = SAMPLE_TASKS;
+      refDocs = SAMPLE_REFS;
+      showStatus('demo', '📋 Demo mode — showing sample tasks');
+    }
+  } else {
+    tasks = SAMPLE_TASKS;
+    refDocs = SAMPLE_REFS;
+    showStatus('demo', '📋 Preview mode — connect the web app to see live data');
+  }
+  
+  render();
+}
+
+// ── Mark Complete ───────────────────────────────────────────────────────────
+async function markComplete(taskId, buttonEl, cardEl) {
+  const name = crewNameInput.value.trim();
+  if (!name) {
+    crewNameInput.focus();
+    crewNameInput.style.borderColor = '#c0392b';
+    setTimeout(() => { crewNameInput.style.borderColor = ''; }, 2000);
+    showToast('Please enter your name first');
+    return;
+  }
+
+  buttonEl.disabled = true;
+  buttonEl.textContent = '✓';
+  
+  if (WEB_APP_URL) {
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId, crewName: name })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to save');
+      }
+    } catch (e) {
+      console.error('Write failed:', e);
+      showToast('Could not save — check connection');
+      buttonEl.disabled = false;
+      buttonEl.textContent = '';
+      return;
+    }
+  }
+  
+  // Update local state
+  const task = tasks.find(t => t.id === taskId);
+  if (task) {
+    task.lastDone = new Date().toISOString().split('T')[0];
+    task.completedBy = name;
+    task.isOverdue = false;
+  }
+  
+  cardEl.classList.remove('overdue');
+  cardEl.classList.add('completed');
+  buttonEl.textContent = '✓';
+  
+  showToast('✓ Task completed');
+}
+
+// ── Render ──────────────────────────────────────────────────────────────────
+function render() {
+  renderTasks();
+  renderRefDocs();
+}
+
+function renderTasks() {
+  if (!tasks.length) {
+    taskListEl.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <p>No tasks for today</p>
+        <div class="sub">All caught up! Check back tomorrow.</div>
+      </div>`;
+    return;
+  }
+  
+  // Sort: overdue first, then by nextDue
+  const sorted = [...tasks].sort((a, b) => {
+    if (a.isOverdue && !b.isOverdue) return -1;
+    if (!a.isOverdue && b.isOverdue) return 1;
+    return (a.nextDue || '').localeCompare(b.nextDue || '');
+  });
+  
+  // Build grouped structure
+  // Parents: "Temporary Housing" → sub-groups "Daily Compliance", "Tuesday Compliance"
+  // Standalone categories (blank parent) → direct groups
+  const groups = {};
+  const parentOrder = ['Temporary Housing'];
+  const standaloneCategories = [];
+  
+  for (const task of sorted) {
+    const parent = task.parent || '';
+    const cat = task.category || 'Other';
+    
+    if (parent && parentOrder.includes(parent)) {
+      if (!groups[parent]) groups[parent] = {};
+      if (!groups[parent][cat]) groups[parent][cat] = [];
+      groups[parent][cat].push(task);
+    } else {
+      if (!groups['__standalone__']) groups['__standalone__'] = {};
+      if (!groups['__standalone__'][cat]) groups['__standalone__'][cat] = [];
+      groups['__standalone__'][cat].push(task);
+      if (!standaloneCategories.includes(cat)) standaloneCategories.push(cat);
+    }
+  }
+  
+  let html = '';
+  
+  // Render Temporary Housing (collapsible group)
+  if (groups['Temporary Housing']) {
+    const parentGroup = groups['Temporary Housing'];
+    const subKeys = Object.keys(parentGroup);
+    
+    html += `<div class="section">`;
+    html += `<div class="section-header">
+      <span>Temporary Housing</span>
+      <span style="font-size:13px;font-weight:400;opacity:0.9">
+        ${subKeys.reduce((s, k) => s + parentGroup[k].length, 0)} tasks
+      </span>
+    </div>`;
+    
+    // Sub groups: Daily Compliance, Tuesday Compliance
+    for (const subKey of subKeys) {
+      html += `<div class="sub-section">`;
+      html += `<div class="sub-header">${subKey}</div>`;
+      for (const task of parentGroup[subKey]) {
+        html += renderTaskCard(task);
+      }
+      html += `</div>`;
+    }
+    
+    html += `</div>`;
+  }
+  
+  // Render standalone categories
+  for (const cat of standaloneCategories) {
+    const catTasks = groups['__standalone__'][cat];
+    const overdueCount = catTasks.filter(t => t.isOverdue).length;
+    
+    html += `<div class="section">`;
+    html += `<div class="section-header">
+      <span>${cat}</span>
+      <span style="font-size:13px;font-weight:400;opacity:0.9">
+        ${overdueCount > 0 ? `🔴 ${overdueCount} overdue · ` : ''}${catTasks.length} tasks
+      </span>
+    </div>`;
+    for (const task of catTasks) {
+      html += renderTaskCard(task);
+    }
+    html += `</div>`;
+  }
+  
+  // Check if there are no task groups at all
+  if (!html) {
+    html = `<div class="empty-state">
+      <div class="icon">📋</div>
+      <p>No tasks for today</p>
+      <div class="sub">All caught up! Check back tomorrow.</div>
+    </div>`;
+  }
+  
+  taskListEl.innerHTML = html;
+  
+  // Attach click handlers
+  document.querySelectorAll('.complete-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const taskId = this.dataset.taskId;
+      const card = this.closest('.task-card');
+      markComplete(taskId, this, card);
+    });
+  });
+}
+
+function renderTaskCard(task) {
+  const isDone = task.lastDone && task.lastDone.length > 0;
+  const classes = ['task-card'];
+  if (task.isOverdue) classes.push('overdue');
+  if (isDone) classes.push('completed');
+  
+  const cadenceClass = {
+    'Daily': 'badge-daily',
+    'Weekly': 'badge-weekly',
+    'Monthly': 'badge-monthly',
+    'Quarterly': 'badge-quarterly'
+  }[task.cadence] || 'badge-oneoff';
+  
+  let metaHtml = `<span class="badge ${cadenceClass}">${task.cadence || 'One-off'}</span>`;
+  
+  if (task.isOverdue) {
+    metaHtml += ` <span class="badge badge-overdue">⚠ OVERDUE</span>`;
+  }
+  if (isDone) {
+    metaHtml += ` <span class="badge badge-completed">✓ Done ${task.lastDone}</span>`;
+    if (task.completedBy) metaHtml += ` <span>by ${task.completedBy}</span>`;
+  }
+  
+  return `
+    <div class="${classes.join(' ')}">
+      <div class="check-col">
+        <button class="complete-btn" data-task-id="${task.id}" ${isDone ? 'disabled' : ''}>
+          ${isDone ? '✓' : ''}
+        </button>
+      </div>
+      <div class="task-body">
+        <div class="task-name">${escapeHtml(task.name)}</div>
+        <div class="task-meta">${metaHtml}</div>
+        ${task.notes ? `<div class="task-notes">${escapeHtml(task.notes)}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+function renderRefDocs() {
+  if (!refDocs.length) {
+    refSectionEl.innerHTML = '';
+    return;
+  }
+  
+  let html = `<h2>📄 Crew Reference Documents</h2>
+    <div class="ref-grid">`;
+  
+  for (const doc of refDocs) {
+    html += `
+      <a href="${escapeHtml(doc.url)}" target="_blank" class="ref-card">
+        <div class="crew-name">${escapeHtml(doc.crew)}</div>
+        <div class="crew-leader">Crew leader: ${escapeHtml(doc.leader)}</div>
+        <div class="crew-doc">${escapeHtml(doc.title)} →</div>
+      </a>`;
+  }
+  
+  html += `</div>`;
+  refSectionEl.innerHTML = html;
+}
+
+// ── Utilities ───────────────────────────────────────────────────────────────
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function showStatus(type, msg) {
+  statusBanner.className = 'status-banner ' + type;
+  statusBanner.textContent = msg;
+  statusBanner.style.display = 'block';
+}
+
+function hideStatus() {
+  statusBanner.style.display = 'none';
+}
+
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastEl._timer);
+  toastEl._timer = setTimeout(() => toastEl.classList.remove('show'), 2500);
+}
+
+// ── Start ───────────────────────────────────────────────────────────────────
+loadTasks();
+</script>
+</body>
+</html>
