@@ -10,16 +10,17 @@
   --primary: #212557;
   --primary-light: #2f3473;
   --primary-dark: #171b42;
+  --brand-red: #ce2032;
+  --brand-gray: #58585a;
   --accent: #e8b84b;
   --accent-hover: #d4a63a;
   --bg: #f5f5f0;
   --card-bg: #ffffff;
   --text: #1a1a1a;
-  --text-light: #666666;
+  --text-light: var(--brand-gray);
   --border: #e0ddd5;
   --success: #2d8a4e;
-  --danger: #c0392b;
-  --warning: #e67e22;
+  --danger: var(--brand-red);
   --overdue-bg: #fef0ef;
   --overdue-border: #f5c6c2;
   --done-bg: #f0f9f2;
@@ -459,9 +460,9 @@ header img {
 <!-- ═══ Password Gate ═══ -->
 <div class="gate-overlay" id="gateOverlay">
   <div class="gate-box">
-    <img src="https://img1.wsimg.com/isteam/ip/0945c099-6201-4d5f-8d3e-ce9d69261f44/SATTC%20Logo.png/:/rs=h:97,cg:true,m/qt=q:95"
+    <img src="SATTC%20logo%20image.png"
          alt="SATTC Logo"
-         onerror="this.style.display='none'">
+         class="logo-icon">
     <h2>Staff Work Checklist</h2>
     <p>Enter the password to access today's tasks</p>
     <input type="password" id="gatePassword" placeholder="Enter password" autocomplete="off">
@@ -475,9 +476,9 @@ header img {
 <!-- ═══ Header ═══ -->
 <header>
   <div class="header-inner">
-    <img src="https://img1.wsimg.com/isteam/ip/0945c099-6201-4d5f-8d3e-ce9d69261f44/SATTC%20Logo.png/:/rs=h:97,cg:true,m/qt=q:95"
+    <img src="SATTC%20logo%20image.png"
          alt="SATTC Logo"
-         onerror="this.style.display='none'">
+         class="logo-icon">
     <div class="header-text">
       <h1>Work Checklist</h1>
       <div class="date" id="currentDate"></div>
