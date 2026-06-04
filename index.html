@@ -345,6 +345,7 @@ header img {
 .badge-oneoff { background: #fce4ec; color: #b71c1c; }
 .badge-overdue { background: #fdecea; color: var(--danger); font-weight: 700; }
 .badge-completed { background: #e8f5e9; color: var(--success); }
+.due-date { font-size: 12px; color: var(--text-light); font-weight: 500; }
 
 /* ── Notes ────────────────────────────────────────────── */
 .task-notes {
@@ -822,6 +823,12 @@ function renderTaskCard(task) {
   
   let metaHtml = `<span class="badge ${cadenceClass}">${task.cadence || 'One-off'}</span>`;
   
+  // Show due date for incomplete tasks
+  if (task.nextDue && !isDone) {
+    const dueLabel = task.isOverdue ? 'Was due' : 'Due';
+    metaHtml += ` <span class="due-date">${dueLabel} ${formatDate(task.nextDue)}</span>`;
+  }
+  
   if (task.isOverdue) {
     metaHtml += ` <span class="badge badge-overdue">⚠ OVERDUE</span>`;
   }
@@ -868,6 +875,16 @@ function renderRefDocs() {
 }
 
 // ── Utilities ───────────────────────────────────────────────────────────────
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length === 3) {
+    const d = new Date(parts[0], parts[1]-1, parts[2]);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+  }
+  return dateStr;
+}
+
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
