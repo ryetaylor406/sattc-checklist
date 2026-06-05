@@ -650,6 +650,9 @@ async function loadTasks() {
 
 // ── Mark Complete ───────────────────────────────────────────────────────────
 async function markComplete(taskId, buttonEl, cardEl) {
+  // Guard: already processing or done
+  if (buttonEl.disabled) return;
+  
   const name = crewNameInput.value.trim();
   if (!name) {
     crewNameInput.focus();
