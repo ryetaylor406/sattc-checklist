@@ -665,18 +665,28 @@ async function markComplete(taskId, buttonEl, cardEl) {
   if (WEB_APP_URL) {
     try {
       const url = WEB_APP_URL + '?action=complete&taskId=' + encodeURIComponent(taskId) + '&crewName=' + encodeURIComponent(name);
-      const res = await fetch(url);
+      const res = await fetch(url, { redirect: 'follow' });
       const text = await res.text();
       const data = JSON.parse(text);
       if (!data.success) {
         throw new Error(data.error || 'Failed to save');
       }
     } catch (e) {
-      console.error('Write failed:', e);
-      showToast('Could not save — check connection');
-      buttonEl.disabled = false;
-      buttonEl.textContent = '';
-      return;
+      console.warn('First attempt:', e);
+      // Retry once — Apps Script redirects can cause first-request issues
+      try {
+        const url = WEB_APP_URL + '?action=complete&taskId=' + encodeURIComponent(taskId) + '&crewName=' + encodeURIComponent(name);
+        const res = await fetch(url, { redirect: 'follow' });
+        const text = await res.text();
+        const data = JSON.parse(text);
+        if (!data.success) throw new Error(data.error || 'Failed to save');
+      } catch (e2) {
+        console.error('Write failed after retry:', e2);
+        showToast('Could not save — check connection');
+        buttonEl.disabled = false;
+        buttonEl.textContent = '';
+        return;
+      }
     }
   }
   
