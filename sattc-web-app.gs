@@ -18,10 +18,18 @@ const TASKS_TAB = 'Tasks';
 const REFDOCS_TAB = 'ReferenceDocs';
 const LOGS_TAB = 'Logs';
 
-// ── GET: Return active tasks & reference docs as JSON ──────────────────────
-function doGet() {
+// ── GET: Load tasks or complete a task ──────────────────────────────────────
+function doGet(e) {
+  // If action=complete, handle task completion
+  if (e && e.parameter && e.parameter.action === 'complete') {
+    return doComplete(e);
+  }
+  
   try {
     const ss = SpreadsheetApp.openById(SHEET_ID);
+    
+    // Promote any pending Intake tasks immediately
+    promoteIntakeTasks();
     
     // Read tasks
     const tasksSheet = ss.getSheetByName(TASKS_TAB);
@@ -113,8 +121,8 @@ function doGet() {
   }
 }
 
-// ── POST: Mark a task as completed ──────────────────────────────────────────
-function doPost(e) {
+// ── COMPLETE: Mark a task as completed (called from doGet via query params) ─
+function doComplete(e) {
   try {
     const data = e.parameter;
     const taskId = data.taskId;
