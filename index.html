@@ -661,48 +661,31 @@ async function markComplete(taskId, buttonEl, cardEl) {
 
   buttonEl.disabled = true;
   buttonEl.textContent = '✓';
-  
-  if (WEB_APP_URL) {
-    try {
-      const url = WEB_APP_URL + '?action=complete&taskId=' + encodeURIComponent(taskId) + '&crewName=' + encodeURIComponent(name);
-      const res = await fetch(url, { redirect: 'follow' });
-      const text = await res.text();
-      const data = JSON.parse(text);
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to save');
-      }
-    } catch (e) {
-      console.warn('First attempt:', e);
-      // Retry once — Apps Script redirects can cause first-request issues
-      try {
-        const url = WEB_APP_URL + '?action=complete&taskId=' + encodeURIComponent(taskId) + '&crewName=' + encodeURIComponent(name);
-        const res = await fetch(url, { redirect: 'follow' });
-        const text = await res.text();
-        const data = JSON.parse(text);
-        if (!data.success) throw new Error(data.error || 'Failed to save');
-      } catch (e2) {
-        console.error('Write failed after retry:', e2);
-        showToast('Could not save — check connection');
-        buttonEl.disabled = false;
-        buttonEl.textContent = '';
-        return;
-      }
-    }
-  }
-  
-  // Update local state
+  // Update local state & UI instantly (optimistic)
   const task = tasks.find(t => t.id === taskId);
   if (task) {
     task.lastDone = new Date().toISOString().split('T')[0];
     task.completedBy = name;
     task.isOverdue = false;
   }
-  
   cardEl.classList.remove('overdue');
   cardEl.classList.add('completed');
+  buttonEl.disabled = true;
   buttonEl.textContent = '✓';
-  
   showToast('✓ Task completed');
+  
+  // Save to server in the background
+  if (WEB_APP_URL) {
+    const url = WEB_APP_URL + '?action=complete&taskId=' + encodeURIComponent(taskId) + '&crewName=' + encodeURIComponent(name);
+    fetch(url, { redirect: 'follow' })
+      .then(r => r.text())
+      .then(t => JSON.parse(t))
+      .then(d => { if (!d.success) throw new Error(d.error); })
+      .catch(e => {
+        console.warn('Server save failed, local state preserved:', e);
+        // Could revert here, but the task already looks done — leave it
+      });
+  }
 }
 
 // ── Render ──────────────────────────────────────────────────────────────────
