@@ -665,7 +665,7 @@ async function markComplete(taskId, buttonEl, cardEl) {
   if (WEB_APP_URL) {
     try {
       const params = new URLSearchParams({ taskId, crewName: name });
-      const res = await fetch(WEB_APP_URL, {
+      const res = await fetch(WEB_APP_URL + '?', {
         method: 'POST',
         body: params
       });
