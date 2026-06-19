@@ -624,7 +624,7 @@ async function loadTasks() {
   if (WEB_APP_URL) {
     showStatus('loading', 'Loading tasks...');
     try {
-      const res = await fetch(WEB_APP_URL);
+      const res = await fetch(WEB_APP_URL + '?t=' + Date.now());
       const data = await res.json();
       if (data.success) {
         tasks = data.tasks;
