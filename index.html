@@ -249,7 +249,7 @@ header img {
   align-items: center;
 }
 
-/* ── Sub-Section (e.g. Daily Compliance under Temporary Housing) ── */
+/* ── Sub-Section (e.g. Daily Expectations under Temporary Housing) ── */
 .sub-section {
   margin: 0 0 2px 0;
 }
@@ -525,25 +525,25 @@ header img {
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────────────────
-const GATE_PASSWORD = '1200';
+const GATE_PASSWORD = 'Test';
 
 // After deploying the Apps Script Web App, paste its URL here:
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx4PeC1G4U_R0bOLh2IpEaIXc_qdVZpvnY5S11ha9rI3huqX9ybc7UyFmHYL33eQ_nU/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx_g4HbSumOGf3NFB1za5ZpZ33bQHRb8G9_r8J8cR1CJZFg_MDOZEYaGqIs37qD4tuE/exec';
 
 // ── Sample Fallback Data ────────────────────────────────────────────────────
 // Shows when WEB_APP_URL is not configured (preview/demo mode)
 const SAMPLE_TASKS = [
-  { id:"TH-D1", name:"Rooms are vacated and doors are locked at 9AM", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-03", lastDone:"", notes:"Temporary Housing — first item of the day", completedBy:"", parent:"Temporary Housing", isOverdue:true },
-  { id:"TH-D2", name:"Ensure trash is removed from all rooms", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-04", lastDone:"", notes:"Individual Inspection of Rooms", completedBy:"", parent:"Temporary Housing", isOverdue:true },
-  { id:"TH-D3", name:"Ensure dishes are removed from all rooms and washed", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Individual Inspection of Rooms", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-D4", name:"Ensure trash is removed (kitchen, bathroom, hallway)", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-D5", name:"Ensure dishes are washed", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-D6", name:"Ensure dishes in the cabinets are clean", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-D7", name:"Ensure countertops/tables have been washed with a wet cloth and cleaner", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-D8", name:"Ensure bathroom sink has been washed with a wet cloth and cleaner", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-D9", name:"Ensure the bathroom floor has been mopped with a swiffer", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Critical: track dirt back in", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-D10", name:"Ensure the stairs and entrance way has been mopped", category:"Daily Compliance", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Lock door after mopping so it dries without traffic", completedBy:"", parent:"Temporary Housing", isOverdue:false },
-  { id:"TH-T1", name:"Participants must remove all personal items from the property by 9AM", category:"Tuesday Compliance", cadence:"Weekly", nextDue:"2026-06-09", lastDone:"", notes:"Tuesdays only", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D1", name:"Rooms are vacated and doors are locked at 9AM", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-03", lastDone:"", notes:"Temporary Housing — first item of the day", completedBy:"", parent:"Temporary Housing", isOverdue:true },
+  { id:"TH-D2", name:"Ensure trash is removed from all rooms", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-04", lastDone:"", notes:"Individual Inspection of Rooms", completedBy:"", parent:"Temporary Housing", isOverdue:true },
+  { id:"TH-D3", name:"Ensure dishes are removed from all rooms and washed", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Individual Inspection of Rooms", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D4", name:"Ensure trash is removed (kitchen, bathroom, hallway)", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D5", name:"Ensure dishes are washed", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D6", name:"Ensure dishes in the cabinets are clean", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D7", name:"Ensure countertops/tables have been washed with a wet cloth and cleaner", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D8", name:"Ensure bathroom sink has been washed with a wet cloth and cleaner", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Inspection of Kitchen, Bathroom, and Hallway", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D9", name:"Ensure the bathroom floor has been mopped with a swiffer", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Critical: track dirt back in", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-D10", name:"Ensure the stairs and entrance way has been mopped", category:"Daily Expectations", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"Lock door after mopping so it dries without traffic", completedBy:"", parent:"Temporary Housing", isOverdue:false },
+  { id:"TH-T1", name:"Participants must remove all personal items from the property by 9AM", category:"Tuesday Expectations", cadence:"Weekly", nextDue:"2026-06-09", lastDone:"", notes:"Tuesdays only", completedBy:"", parent:"Temporary Housing", isOverdue:false },
   { id:"FAC-001", name:"Change batteries in smoke detector - Eldorado Family Center", category:"Eldorado", cadence:"Quarterly", nextDue:"2026-09-15", lastDone:"", notes:"Facility recurring task", completedBy:"", parent:"", isOverdue:false },
   { id:"FAC-002", name:"Test smoke detectors (all locations)", category:"Eldorado", cadence:"Monthly", nextDue:"2026-07-01", lastDone:"", notes:"Apply to all buildings", completedBy:"", parent:"", isOverdue:false },
   { id:"INT-2", name:"Wipe down breakroom counters", category:"Eldorado", cadence:"Daily", nextDue:"2026-06-05", lastDone:"", notes:"", completedBy:"", parent:"", isOverdue:false }
@@ -716,7 +716,7 @@ function renderTasks() {
   });
   
   // Build grouped structure
-  // Parents: "Temporary Housing" → sub-groups "Daily Compliance", "Tuesday Compliance"
+  // Parents: "Temporary Housing" → sub-groups "Daily Expectations", "Tuesday Expectations"
   // Standalone categories (blank parent) → direct groups
   const groups = {};
   const parentOrder = ['Temporary Housing'];
@@ -756,7 +756,7 @@ function renderTasks() {
       </span>
     </div>`;
     
-    // Sub groups: Daily Compliance, Tuesday Compliance
+    // Sub groups: Daily Expectations, Tuesday Expectations
     for (const subKey of subKeys) {
       html += `<div class="sub-section">`;
       html += `<div class="sub-header">${subKey}</div>`;
