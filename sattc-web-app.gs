@@ -32,7 +32,6 @@ function doGet(e) {
     promoteIntakeTasks();
     
     // Read tasks
-    const tasksSheet = ss.getSheetByName(TASKS_TAB);
     const taskRows = tasksSheet.getDataRange().getValues();
     const taskHeaders = taskRows[0];
     
