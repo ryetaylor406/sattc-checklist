@@ -680,11 +680,8 @@ async function markComplete(taskId, buttonEl, cardEl) {
   
   // Save to server in the background
   if (WEB_APP_URL) {
-    const body = new URLSearchParams();
-    body.append('action', 'complete');
-    body.append('taskId', taskId);
-    body.append('crewName', name);
-    fetch(WEB_APP_URL, { method: 'POST', body: body })
+    const url = WEB_APP_URL + '?action=complete&taskId=' + encodeURIComponent(taskId) + '&crewName=' + encodeURIComponent(name);
+    fetch(url)
       .then(r => r.json())
       .then(d => { if (!d.success) throw new Error(d.error); })
       .catch(e => {
