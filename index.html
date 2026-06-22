@@ -894,7 +894,7 @@ function formatDate(dateStr) {
   const parts = dateStr.split('-');
   if (parts.length === 3) {
     const d = new Date(parts[0], parts[1]-1, parts[2]);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
   return dateStr;
 }
