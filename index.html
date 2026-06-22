@@ -680,14 +680,25 @@ async function markComplete(taskId, buttonEl, cardEl) {
   
   // Save to server in the background
   if (WEB_APP_URL) {
-    const url = WEB_APP_URL + '?action=complete&taskId=' + encodeURIComponent(taskId) + '&crewName=' + encodeURIComponent(name);
-    fetch(url, { redirect: 'follow' })
-      .then(r => r.text())
-      .then(t => JSON.parse(t))
+    const body = new URLSearchParams();
+    body.append('action', 'complete');
+    body.append('taskId', taskId);
+    body.append('crewName', name);
+    fetch(WEB_APP_URL, { method: 'POST', body: body })
+      .then(r => r.json())
       .then(d => { if (!d.success) throw new Error(d.error); })
       .catch(e => {
-        console.warn('Server save failed, local state preserved:', e);
-        // Could revert here, but the task already looks done — leave it
+        // Revert optimistic UI — the task is NOT actually done
+        showToast('⚠️ Save failed — tap ✓ to retry');
+        if (task) {
+          task.lastDone = '';
+          task.completedBy = '';
+          task.isOverdue = true;
+        }
+        cardEl.classList.remove('completed');
+        cardEl.classList.add('overdue');
+        buttonEl.disabled = false;
+        buttonEl.textContent = '✓';
       });
   }
 }
